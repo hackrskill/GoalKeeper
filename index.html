@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goal Keeper - Task Management System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- Authentication Pages -->
+        <div id="auth-container" class="auth-container">
+            <div class="auth-card" id="login-card">
+                <h2>GoalKeeper</h2>
+                <h3>Login to your account</h3>
+                <form id="login-form">
+                    <div class="input-group">
+                        <label for="login-email">Email</label>
+                        <input type="email" id="login-email" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" required>
+                    </div>
+                    <div class="error-message" id="login-error"></div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+                <p>Don't have an account? <a href="#" id="show-signup">Sign up</a></p>
+            </div>
+
+            <div class="auth-card" id="signup-card" style="display: none;">
+                <h2>GoalKeeper</h2>
+                <h3>Create your account</h3>
+                <form id="signup-form">
+                    <div class="input-group">
+                        <label for="signup-name">Full Name</label>
+                        <input type="text" id="signup-name" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="signup-email">Email</label>
+                        <input type="email" id="signup-email" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="signup-password">Password</label>
+                        <input type="password" id="signup-password" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="signup-confirm">Confirm Password</label>
+                        <input type="password" id="signup-confirm" required>
+                    </div>
+                    <div class="error-message" id="signup-error"></div>
+                    <button type="submit" class="btn btn-primary">Sign Up</button>
+                </form>
+                <p>Already have an account? <a href="#" id="show-login">Login</a></p>
+            </div>
+        </div>
+
+        <!-- Main Application -->
+        <div id="main-app" style="display: none;">
+            <!-- Sidebar Navigation -->
+            <aside class="sidebar">
+                <div class="sidebar-header">
+                    <img src="logo.webp" alt="Logo" class="logo">
+                    <h2>GoalKeeper</h2>
+                </div>
+                
+                <div class="user-profile">
+                    <div class="user-avatar">
+                        <img src="user-removebg-preview.png" alt="User" id="user-avatar">
+                        <span class="online-indicator"></span>
+                    </div>
+                    <div class="user-info">
+                        <h3 id="user-name">rohit sukul</h3>
+                        <p id="user-email">sukul@example.com</p>
+                    </div>
+                </div>
+                
+                <nav class="sidebar-nav">
+                    <ul>
+                        <li class="active"><a href="#dashboard"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                        <!-- <li><i class="fas fa-tasks"></i> All Tasks</a></li> -->
+                        <!-- <li><a href="#today"><i class="fas fa-calendar-day"></i> Today</a></li>  -->
+                        <!-- <li><a href="#upcoming"><i class="fas fa-calendar-alt"></i> Upcoming</a></li> -->
+                        <!-- <li><a href="#completed"><i class="fas fa-check-circle"></i> Completed</a></li> -->
+                    </ul>
+                </nav>
+                <div class="sidebar-footer">
+                    <button id="signout-btn" class="btn btn-outline"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <header class="main-header">
+                    <div class="search-container">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search tasks..." id="search-tasks">
+                    </div>
+                    <div class="header-actions">
+                        <button id="add-task-btn" class="btn btn-primary"><i class="fas fa-plus"></i> Add Task</button>
+                        <div class="notification-icon">
+                            <i class="fas fa-bell"></i>
+                            <!-- <span class="notification-badge">3</span> -->
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Dashboard Section -->
+                <section id="dashboard-section" class="dashboard">
+                    <div class="section-header">
+                        <h2>Dashboard</h2>
+                        <p class="date" id="current-date">Monday, May 12, 2025</p>
+                    </div>
+
+                    <div class="stats-cards">
+                        <div class="stat-card">
+                            <div class="stat-icon bg-primary">
+                                <i class="fas fa-list"></i>
+                            </div>
+                            <div class="stat-details">
+                                <h3>Total Tasks</h3>
+                                <p id="total-tasks">12</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon bg-warning">
+                                <i class="fas fa-hourglass-half"></i>
+                            </div>
+                            <div class="stat-details">
+                                <h3>In Progress</h3>
+                                <p id="in-progress-tasks">5</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon bg-success">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="stat-details">
+                                <h3>Completed</h3>
+                                <p id="completed-tasks">4</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon bg-danger">
+                                <i class="fas fa-exclamation-circle"></i>
+                            </div>
+                            <div class="stat-details">
+                                <h3>Overdue</h3>
+                                <p id="overdue-tasks">3</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-grid">
+                        <div class="chart-container">
+                            <div class="chart-header">
+                                <h3>Task Progress</h3>
+                                <div class="chart-filters">
+                                    <select id="chart-time-filter">
+                                        <option value="week">Last Week</option>
+                                        <option value="month" selected>Last Month</option>
+                                        <option value="year">Last Year</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="chart-content">
+                                <canvas id="task-chart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="tasks-breakdown">
+                            <div class="task-breakdown-header">
+                                <h3>Tasks by Priority</h3>
+                            </div>
+                            <div class="priority-progress">
+                                <div class="priority-item">
+                                    <div class="priority-label">
+                                        <span class="priority-dot high"></span>
+                                        <span>High Priority</span>
+                                    </div>
+                                    <div class="progress-container">
+                                        <div class="progress-bar bg-danger" style="width: 70%;"></div>
+                                    </div>
+                                    <span class="progress-text">70%</span>
+                                </div>
+                                <div class="priority-item">
+                                    <div class="priority-label">
+                                        <span class="priority-dot medium"></span>
+                                        <span>Medium Priority</span>
+                                    </div>
+                                    <div class="progress-container">
+                                        <div class="progress-bar bg-warning" style="width: 45%;"></div>
+                                    </div>
+                                    <span class="progress-text">45%</span>
+                                </div>
+                                <div class="priority-item">
+                                    <div class="priority-label">
+                                        <span class="priority-dot low"></span>
+                                        <span>Low Priority</span>
+                                    </div>
+                                    <div class="progress-container">
+                                        <div class="progress-bar bg-success" style="width: 90%;"></div>
+                                    </div>
+                                    <span class="progress-text">90%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tasks-section">
+                        <div class="section-header">
+                            <h3>Upcoming Tasks</h3>
+                            <a href="#" class="view-all">View All</a>
+                        </div>
+                        <div class="task-list" id="upcoming-tasks">
+                            <!-- Task items will be populated dynamically -->
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <!-- Task Modal -->
+        <div id="task-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modal-title">Add New Task</h3>
+                    <button id="close-modal" class="close-btn">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="task-form">
+                        <input type="hidden" id="task-id">
+                        <div class="input-group">
+                            <label for="task-title">Task Title</label>
+                            <input type="text" id="task-title" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="task-description">Description</label>
+                            <textarea id="task-description" rows="3"></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="input-group">
+                                <label for="task-due-date">Due Date</label>
+                                <input type="date" id="task-due-date" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="task-priority">Priority</label>
+                                <select id="task-priority" required>
+                                    <option value="low">Low</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="high">High</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="error-message" id="task-error"></div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline" id="cancel-task">Cancel</button>
+                            <button type="submit" class="btn btn-primary" id="save-task">Save Task</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
